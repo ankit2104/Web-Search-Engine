@@ -5,14 +5,62 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.Map;
+import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class SearchWord {
 	static ArrayList<String> key = new ArrayList<String>();
 	static HashMap<String, Integer> numbers = new HashMap<String, Integer>();
+	
+	// Merge-sort for ranking of the pages
+	public static void rankFiles(Hashtable<?, Integer> files, int occurence) 
+	{
+
+		// Transfer as List and sort it
+		ArrayList<Map.Entry<?, Integer>> fileList = new ArrayList<Map.Entry<?, Integer>>(files.entrySet());
+
+		Collections.sort(fileList, new Comparator<Map.Entry<?, Integer>>() 
+		{
+
+		public int compare(Map.Entry<?, Integer> object1, Map.Entry<?, Integer> object2) 
+			{
+				return object1.getValue().compareTo(object2.getValue());
+			}
+		});
+
+		Collections.reverse(fileList);
+
+		if (occurence != 0) 
+		{
+					
+			System.out.println("------Display top 3 search results -----");
+
+			int numberOfFetch = 3;
+			int j = 0;
+			int i=1;
+			while (fileList.size() > j && numberOfFetch > 0) 
+			{
+						
+						
+				if(fileList.get(j).getKey()!=null) 
+				{
+					System.out.println("(" + i + ") " + fileList.get(j).getKey());
+					j++;
+					i++;
+				}
+				numberOfFetch--;
+						
+			}
+		} 
+
+	}
+
 		
 		// suggest alternative word in case we don't get the word searched. 
 		public static void suggestAlternativeWord(String wordToBeSearched) {
@@ -27,7 +75,7 @@ public class SearchWord {
 			Matcher matcherobj = patternobj.matcher(line);
 			
 			// get access to the list of files from the directory path provided in PathFinder class
-			File directory = new File(Path.txtDirectoryPath);
+			File directory = new File(PathFinder.txtDirectoryPath);
 			File[] fileList = directory.listFiles();
 			for (int i = 0; i < fileList.length; i++) {
 				try {
@@ -121,5 +169,51 @@ public class SearchWord {
 
 			return my_array[length1][length2];
 		}
+		public static int WordSearchUsingKMP(String readAllLines, String listOfWord, String fileName)
+		{
+			
+			 int counter = 0;
+			 int lineoffset =0;
+			
+			 KMP KMPObj = new KMP(listOfWord.toLowerCase());
+			Scanner scannerKMP = new Scanner(readAllLines);
+			
+			while (scannerKMP.hasNextLine()) { //iterating each line of the files.
+			 String line = scannerKMP.nextLine().toLowerCase();
+			
+			 int offset = KMPObj.search(line); //getting the first occurrence in the line 
+			
+			 lineoffset = offset;
+			 if(offset!=line.length()) //going to check the offset for the remaining portion of the line
+			 {
+				 counter++;
+				 while(offset!=line.length())
+				 {
+					 int pos =offset+listOfWord.length();
+					 line = line.substring(pos);	//getting the remaining substring of the line
+					 offset = KMPObj.search(line);			//finding the offset in the substring
+					 int currentoffset = listOfWord.length()+ offset;
+					 lineoffset+=currentoffset;
+					  
+					 if(offset!=line.length())
+					 {
+						 counter++;
+						
+					 }
+				 }
+			 }
+			
+			  
+			}
+			scannerKMP.close();
+			if (counter != 0) {
+				System.out.println("Value found in the HTML file --> " + fileName+" --> "+counter+" times"); // Founded from which HTML file..
+				System.out.println("-------------------------------------------------------------------------");
+																											
+			}
+			return counter;
+		
+		}
+
 
 }
