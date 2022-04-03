@@ -24,7 +24,7 @@ public class SearchWord {
 			Matcher matcher = pattern.matcher(line);
 			int fileNumber = 0;
 
-			File dir = new File(Path.txtDirectoryPath);
+			File dir = new File(PathFinder.txtDirectoryPath);
 			File[] fileArray = dir.listFiles();
 			for (int i = 0; i < fileArray.length; i++) {
 				try {
