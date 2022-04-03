@@ -13,32 +13,37 @@ import java.util.regex.Pattern;
 public class SearchWord {
 	static ArrayList<String> key = new ArrayList<String>();
 	static HashMap<String, Integer> numbers = new HashMap<String, Integer>();
-
-		public static void suggestAltWord(String wordToSearch) {
+		
+		// suggest alternative word in case we don't get the word searched. 
+		public static void suggestAlternativeWord(String wordToBeSearched) {
 			String line = " ";
-			String regex = "[a-z0-9]+";
-
-			// Create a Pattern object
-			Pattern pattern = Pattern.compile(regex);
-			// Now create matcher object.
-			Matcher matcher = pattern.matcher(line);
+			String regexpattern = "[a-z0-9]+";
 			int fileNumber = 0;
 
-			File dir = new File(PathFinder.txtDirectoryPath);
-			File[] fileArray = dir.listFiles();
-			for (int i = 0; i < fileArray.length; i++) {
+			// Create a regex.Pattern object
+			Pattern patternobj = Pattern.compile(regexpattern);
+			
+			// Now create regex.matcher object
+			Matcher matcherobj = patternobj.matcher(line);
+			
+			// get access to the list of files from the directory path provided in PathFinder class
+			File directory = new File(Path.txtDirectoryPath);
+			File[] fileList = directory.listFiles();
+			for (int i = 0; i < fileList.length; i++) {
 				try {
-					findWord(fileArray[i], fileNumber, matcher, wordToSearch);
+					
+					// call findWord function to get word from the list of text files.
+					findWord(fileList[i], fileNumber, matcherobj, wordToBeSearched);
 					fileNumber++;
-				} catch (FileNotFoundException e) {
-					e.printStackTrace();
+				} catch (FileNotFoundException err) {
+					err.printStackTrace();
 				}
 			}
-
-			Integer allowedDistance = 1; // Edit distance allowed
-			boolean matchFound = false; // set to true if word found with edit distance equal to allowedDistance
-
 			
+			// How much distance the word can be edited to find similar words
+			Integer allowedDistance = 1; 
+			boolean matchFound = false;
+
 			int i = 0;
 			for (Map.Entry entry : numbers.entrySet()) {
 				if (allowedDistance == entry.getValue()) {
@@ -57,48 +62,48 @@ public class SearchWord {
 		}
 
 		// finds strings with similar pattern and calls edit distance() on those strings
-		public static void findWord(File sourceFile, int fileNumber, Matcher match, String str)
+		public static void findWord(File srcFile, int fileNumber, Matcher match, String str)
 				throws FileNotFoundException, ArrayIndexOutOfBoundsException {
 			try {
-				BufferedReader my_rederObject = new BufferedReader(new FileReader(sourceFile));
+				BufferedReader bufferObject = new BufferedReader(new FileReader(srcFile));
 				String line = null;
 
-				while ((line = my_rederObject.readLine()) != null) {
+				while ((line = bufferObject.readLine()) != null) {
 					match.reset(line);
 					while (match.find()) {
 						key.add(match.group());
 					}
 				}
 
-				my_rederObject.close();
-				for (int p = 0; p < key.size(); p++) {
-					numbers.put(key.get(p), editDistance(str.toLowerCase(), key.get(p).toLowerCase()));
+				bufferObject.close();
+				for (int l = 0; l < key.size(); l++) {
+					numbers.put(key.get(l), editDistanceAlgo(str.toLowerCase(), key.get(l).toLowerCase()));
 				}
 			} catch (Exception e) {
 				System.out.println("Exception:" + e);
 			}
 
 		}
+		
+		// edit distance algorithm implementation
+		public static int editDistanceAlgo(String word1, String word2) {
+			int length1 = word1.length();
+			int length2 = word2.length();
 
-		public static int editDistance(String str1, String str2) {
-			int len1 = str1.length();
-			int len2 = str2.length();
+			int[][] my_array = new int[length1 + 1][length2 + 1];
 
-			int[][] my_array = new int[len1 + 1][len2 + 1];
-
-			for (int i = 0; i <= len1; i++) {
+			for (int i = 0; i <= length1; i++) {
 				my_array[i][0] = i;
 			}
 
-			for (int j = 0; j <= len2; j++) {
+			for (int j = 0; j <= length2; j++) {
 				my_array[0][j] = j;
 			}
 
-			// iterate though, and check last char
-			for (int i = 0; i < len1; i++) {
-				char c1 = str1.charAt(i);
-				for (int j = 0; j < len2; j++) {
-					char c2 = str2.charAt(j);
+			for (int i = 0; i < length1; i++) {
+				char c1 = word1.charAt(i);
+				for (int j = 0; j < length2; j++) {
+					char c2 = word2.charAt(j);
 
 					if (c1 == c2) {
 						my_array[i + 1][j + 1] = my_array[i][j];
@@ -114,7 +119,7 @@ public class SearchWord {
 				}
 			}
 
-			return my_array[len1][len2];
+			return my_array[length1][length2];
 		}
 
 }
