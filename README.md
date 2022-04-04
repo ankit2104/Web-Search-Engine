@@ -16,3 +16,8 @@ Web Search Engine developed in Java
 4) jsoup -- java library to fetch URLs and extract data
 5) Merge Sort -- for ranking web pages on basis of word occurence
 6) Hashtable -- indexing the file
+
+<br/>
+
+**Project Flow**<br/>
+![Project flow](https://github.com/ankit2104/Web-Search-Engine/blob/master/web-search-engine-flowchart.jpeg)
