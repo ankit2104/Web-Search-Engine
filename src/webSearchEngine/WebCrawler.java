@@ -11,22 +11,18 @@ import org.jsoup.select.Elements;
 
 public class WebCrawler {
 
-
-	//HashSet is used as it prevents the duplicate value
-	private static Set<String> crawledList = new HashSet<String>();
-	private static int maxDepth = 2; //depth is 2 as our system took more time above that to crawl
+	private static Set<String> listOfLinks = new HashSet<String>();
+	private static int maxDepth = 2;
 	private static String regex = "https?:\\/\\/(www\\.)?[-a-zA-Z0-9@:%._\\+~#=]{1,256}\\.[a-zA-Z0-9()]{1,6}\\b([-a-zA-Z0-9()@:%_\\+.~#?&//=]*)";
 
-	/**
-	 * 
-	 * @param url to crawl
-	 * @param depth at which the crawler should crawl
-	 */
+	
 	public static void startCrawler(String url, int depth) {
 		Pattern patternObject = Pattern.compile(regex);
 		if (depth <= maxDepth) {
 			try {
+				//Jsoup is used for fetching urls and extracting and manipulating data
 				Document document = Jsoup.connect(url).get();
+				
 				HTMLParser.saveHTMLDoc(document, url);
 				depth++;
 				if (depth < maxDepth) {
@@ -37,25 +33,23 @@ public class WebCrawler {
 							
 							System.out.println(page.attr("abs:href"));
 							startCrawler(page.attr("abs:href"), depth);
-							crawledList.add(page.attr("abs:href"));
+							listOfLinks.add(page.attr("abs:href"));
 						}
 					}
 				}
 			} catch (Exception e) {
-
+				e.printStackTrace();
 			}
 		}
 	}
 
-	/**
-	 * verify the correctness of extracted url
-	 * @param nextUrl
-	 * @return
-	 */
+	//To Verify URL:
 	private static boolean verifyUrl(String nextUrl) {
-		if (crawledList.contains(nextUrl)) {
+		//To avoid duplicate urls
+		if (listOfLinks.contains(nextUrl)) {
 			return false;
 		}
+		//to avoid urls that contains following domains
 		if (nextUrl.endsWith(".jpeg") || nextUrl.endsWith(".jpg") || nextUrl.endsWith(".png")
 				|| nextUrl.endsWith(".pdf") || nextUrl.contains("#") || nextUrl.contains("?")
 				|| nextUrl.contains("mailto:") || nextUrl.startsWith("javascript:") || nextUrl.endsWith(".gif")

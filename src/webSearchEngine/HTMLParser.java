@@ -27,28 +27,17 @@ public class HTMLParser {
 	public static void saveHTMLDoc(Document doc, String weburl) {
 		try {
 		
-PrintWriter htmlfile = new PrintWriter(new FileWriter(PathFinder.htmlDirectoryPath + doc.title().replace('/', '_') + ".html"));
+			PrintWriter htmlfile = new PrintWriter(new FileWriter(PathFinder.htmlDirectoryPath + doc.title().replace('/', '_') + ".html"));
 
-htmlfile.write(doc.toString());
-htmlfile.close();
-
-parseHtml(PathFinder.htmlDirectoryPath + doc.title().replace('/', '_') + ".html", weburl, doc.title().replace('/', '_') + ".txt");
+			htmlfile.write(doc.toString());
+			htmlfile.close();
+			parseHtml(PathFinder.htmlDirectoryPath + doc.title().replace('/', '_') + ".html", weburl, doc.title().replace('/', '_') + ".txt");
 
 	} catch (Exception e) {
 
 		}
 
 	}
-/**
-	 * Method to save HTML file to text file
-	 * 
-	 * @param htmlfile
-	 * @param weburl
-	 * @param filename
-
-	 */
-
-
 
 	public static void parseHtml(String htmlfile, String weburl, String textfile) throws Exception {
 		File nfile = new File(htmlfile);
