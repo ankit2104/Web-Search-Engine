@@ -11,44 +11,32 @@ public class WebSearchEngine {
 	
 	private static Scanner sc = new Scanner(System.in);
 
-	/**
-	 * The main method.
-	 *
-	 * @param args the arguments
-	 * @throws Exception
-	 */
 	public static void main(String[] args) throws Exception {
 		WebSearchEngine SearchEngine = new WebSearchEngine();
 		String choice = "n";
-		System.out.println("\n*************************************************************************\n");
-		System.out.println("                       Welcome to Web Search Engine                      ");
-		System.out.println("\n*************************************************************************\n");
-		System.out.println("                               Team Members                              \n");
-		System.out.println("                 Asad Mehmood, Ankit Kunwar, Anuroop Sreepuram,                 ");
-		System.out.println("            		Fazil Mahesania, Jijo Sabu Johns              ");
-		System.out.println("\n*************************************************************************\n");
+		System.out.println("\tWelcome to Doodle Search Engine");
+			
 		do {
-		System.out.println("                    select the option mentioned below                   \n ");
-		System.out.println("*************************************************************************\n");
-			System.out.println(" 1) Enter 1 for the Web search from the URL you will pass");
-			System.out.println(" 2) Enter 2 for the Web search from static URL (https://www.javatpoint.com/)");
-			System.out.println(" 3) Enter 3 for Exit ");
-			System.out.println("\n*************************************************************************\n");
-			int SelectOption = sc.nextInt();
+		System.out.println("\tselect the option mentioned below \n ");
+			System.out.println(" a) Enter 'a' to start Web Creawling from the URL you will pass");
+			System.out.println(" b) Enter 'b' for the Web search from static URL (www.w3schools.com)");
+			System.out.println(" c) Enter 'c' for Exit ");
+			
+			String SelectOption = sc.next();
 
 			switch (SelectOption) {
-			case 1:
-				System.out.println("\n Please enter valid URL for example 'www.xyz.com'");
+			case "a":
+				System.out.println("\n Please enter valid URL for example 'www.abc.com'");
 				String URL = sc.next();
 				URL = "https://"+URL+"/";
 				choice = SearchEngine.searchWord(URL);
 				break;
 
-			case 2:
-				choice = SearchEngine.searchWord("https://www.javatpoint.com/");
+			case "b":
+				choice = SearchEngine.searchWord("https://www.w3schools.com/");
 				break;
 
-			case 3:
+			case "c":
 				System.out.println("Exit...");
 				choice = "n";
 				break;
@@ -59,36 +47,40 @@ public class WebSearchEngine {
 
 			}
 		} while (choice.equals("y"));
-
-		System.out.println("\n*************************************************************************\n");
-		System.out.println("               :) THANK YOU FOR USING WEB SEARCH ENGINE :)               ");
-		System.out.println("\n*************************************************************************\n");
+		
+		System.out.println("Developed by: Doodle developers");                 
 	}
 
 	private String searchWord(String URL) {
 		
 		if(!isValid(URL)) {
-			 System.out.println("Enterd URL " + URL + " isn't valid");
-			 System.out.println("Please try again....\n");
+			 System.out.println("Enterd URL " + URL + " is not valid");
+			 System.out.println("Sorry.. Please try again....\n");
 			 return "y";
 		}
 		
 		System.out.println("Enterd URL " + URL + " is valid\n");
 		
-		System.out.println("Crawling Started...");
-		WebCrawler.startCrawler(URL, 0); 						//crawling the URL
-		System.out.println("Crawling Compelted...");
+		System.out.println("Web crawling started...");
+		WebCrawler.startCrawler(URL, 0); 						
+		System.out.println("Web crawling completed...");
+		
+		System.out.println("\nHTML links are saving in the 'htmlFiles' Folder...");
+		System.out.println("HTML links has been saved...");
+		System.out.println("\nHTML to Text process has been started...");
+		System.out.println("Processing....");
+		System.out.println("\nHTMLtoText Completed....");
 
-		// Hash table is used instead of Hash Map as it don't allow null value in insertion
+		
 		Hashtable<String, Integer> FileList = new Hashtable<String, Integer>();
 		
 		String choice = "y";
 		do {
-			System.out.println("\n*************************************************************************");
-			System.out.println("\n                     Enter a word you want to search                     ");
-			System.out.println("\n*************************************************************************");
+			System.out.println("\nSearch Querry:");
+					
+			System.out.println("\nEnter a word you want to search");
 			String wordToSearch = sc.next();
-			System.out.println("\n*************************************************************************");
+			
 			int NumberofWords = 0;
 			int TotalNoOfFiles = 0;
 			FileList.clear();
@@ -115,13 +107,18 @@ public class WebSearchEngine {
 				}
 
 				if(TotalNoOfFiles>0) {
-				System.out.println("\nTotal count of files which is containing the word : " + wordToSearch + " is : " + TotalNoOfFiles);
-				}else {
-					System.out.println("\n File not found for the word containing : "+ wordToSearch);
-					SearchWord.suggestAlternativeWord(wordToSearch.toLowerCase()); // suggest another word if entered word not found
+				System.out.println("\nNumber of files which is containing the word : " + wordToSearch + " is : " + TotalNoOfFiles);
 				}
-
-				SearchWord.rankFiles(FileList, TotalNoOfFiles); 				   //rank the files based on frequency of word count
+				else {
+					System.out.println("\n File not found for the word containing : "+ wordToSearch);
+					System.out.println("\nSeeing if an alternative word exists...");		
+					
+					// suggest another word if entered word not found
+					SearchWord.suggestAlternativeWord(wordToSearch.toLowerCase()); 
+				}
+				
+				//display the files with respect to the rank based on frequency of word occurrence
+				SearchWord.rankFiles(FileList, TotalNoOfFiles); 				   
 				
 
 			} catch (Exception e) {
@@ -131,9 +128,11 @@ public class WebSearchEngine {
 			choice = sc.next();
 		} while (choice.equals("y"));
 		
-		deleteFiles();					// delete the files created if the user do not want to search any other words and want to start with new URL
+		// delete the files created if the user want to start with new URL
+		deleteFiles();					
 		
-		System.out.println("\n Do you want return to main menu(y/n)?");   // returns to the main menu to choose from new/static URL or exit the code. 
+		// returns to the main menu or exit the code.
+		System.out.println("\n Do you want return to main menu(y/n)?");    
 		return sc.next();
 	}
 
@@ -156,7 +155,7 @@ public class WebSearchEngine {
 		}
 		
 		/**
-		 * It will validate URL entered by user with DNS
+		 * It will validate the URL typed by user
 		 * @param url
 		 * @return
 		 */

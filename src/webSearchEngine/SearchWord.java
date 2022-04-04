@@ -38,8 +38,9 @@ public class SearchWord {
 
 		if (occurence != 0) 
 		{
-					
-			System.out.println("------Display top 3 search results -----");
+			System.out.println("Page Ranking:");
+			System.out.println("-------------");
+			System.out.println("\n------Display top 3 search results -----");
 
 			int numberOfFetch = 3;
 			int j = 0;
@@ -173,7 +174,7 @@ public class SearchWord {
 		{
 			
 			 int counter = 0;
-			 int lineoffset =0;
+			 int lineoffset = 0;
 			
 			 KMP KMPObj = new KMP(listOfWord.toLowerCase());
 			Scanner scannerKMP = new Scanner(readAllLines);
