@@ -18,8 +18,8 @@ public class WebSearchEngine {
 			
 		do {
 		System.out.println("\tselect the option mentioned below \n ");
-			System.out.println(" a) Enter 'a' to start Web Creawling from the URL you will pass");
-			System.out.println(" b) Enter 'b' for the Web search from static URL (www.w3schools.com)");
+			System.out.println(" a) Enter 'a' to start Web Crawling from the URL you will pass");
+			System.out.println(" b) Enter 'b' for the Web search from static URL (https://windsorstar.com)");
 			System.out.println(" c) Enter 'c' for Exit ");
 			
 			String SelectOption = sc.next();
@@ -33,7 +33,7 @@ public class WebSearchEngine {
 				break;
 
 			case "b":
-				choice = SearchEngine.searchWord("https://www.w3schools.com/");
+				choice = SearchEngine.searchWord("https://windsorstar.com");
 				break;
 
 			case "c":
@@ -154,11 +154,7 @@ public class WebSearchEngine {
 			}
 		}
 		
-		/**
-		 * It will validate the URL typed by user
-		 * @param url
-		 * @return
-		 */
+
 		public static boolean isValid(String url)
 	    {
 	        /* Try creating a valid URL */
